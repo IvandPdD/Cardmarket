@@ -17,10 +17,11 @@ class CreateUsuariosTable extends Migration
             $table->id();
             $table->timestamps();
             
-            $table->string('nombre');
-            $table->string('email');
+            $table->string('nombre')->unique();
+            $table->string('email')->unique();
             $table->string('pass');
             $table->enum('rol', ['particular', 'profesional', 'admin']);
+            $table->text('api_token')->nullable();
 
         });
     }

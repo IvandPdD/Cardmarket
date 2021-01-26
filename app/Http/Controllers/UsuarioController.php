@@ -49,6 +49,8 @@ class UsuarioController extends Controller
         if($user && Hash::check($request->pass, $user->pass)){
 
             $token = $user->createToken('Cardmarket')->accessToken;
+            $user->api_token = $token;
+            $user->save();
 
             $respuesta = "OK " . $token;
 

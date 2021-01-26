@@ -28,10 +28,10 @@ Route::prefix('usuarios')->group(function () {
 });
 
 Route::prefix('cartas')->group(function () {
-	Route::post('/alta',[CartaController::class,"alta"])/*->middleware('client')*/;
-	Route::post('/buscar',[CartaController::class,"buscar"])/*->middleware('client')*/;
+	Route::post('/alta',[CartaController::class,"alta"])->middleware('admin');
+	Route::post('/buscar',[CartaController::class,"buscar"])/*->middleware('admin')*/;
 });
 
 Route::prefix('colecciones')->group(function () {
-	Route::post('/alta',[ColeccionController::class,"alta"])/*->middleware('client')*/;
+	Route::post('/alta',[ColeccionController::class,"alta"])->middleware('admin');
 });
