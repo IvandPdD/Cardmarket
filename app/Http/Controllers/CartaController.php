@@ -85,8 +85,8 @@ class CartaController extends Controller
             foreach ($cartas as $key=>$carta) {
 
                 foreach ($carta->venta as $venta) {
-                    $precio[] = $venta->precio;
-                    $cantidad[] = $venta->cantidad;
+                    $precio[$venta->carta_id] = $venta->precio;
+                    $cantidad[$venta->carta_id] = $venta->cantidad;
                 } 
 
                 foreach ($carta->relacion as $relacion) {
@@ -96,9 +96,9 @@ class CartaController extends Controller
                 $datosCartas[] = [
                     "nombre" => $carta->nombre,
                     "descripcion" => $carta->descripcion,
-                    "precio" =>  $precio[$key] ?? "No a la venta",
-                    "cantidad" =>  $cantidad[$key] ?? 0,
-                    "coleccion" => $coleccion[$key]
+                    "coleccion" => $coleccion[$key],
+                    "precio" =>  $precio[$carta->id] ?? "No a la venta",
+                    "cantidad" =>  $cantidad[$carta->id] ?? 0
                 ];
             }return response()->json($datosCartas);
 

@@ -11,14 +11,18 @@ class VentaController extends Controller
 {
     public function venta(Request $request){
         $respueta = "";
+        $checkVenta = false;
+        $checkCarta = false;
 
         $datos = $request->getContent();
         $datos = json_decode($datos);
 
         $apiToken = $request->bearerToken();
 
+        $ventas = Venta::all();
         $venta = new Venta();
 
+        $cartas = Carta::all();
         $usuarios = Usuario::All();
 
         if ($datos){
@@ -30,20 +34,37 @@ class VentaController extends Controller
                 }
             }
 
-            $venta->carta_id = $datos->carta_id;
-            $venta->cantidad = $datos->cantidad;
-            $venta->precio = $datos->precio;
-            $venta->usuario_id = $userId;
+            foreach ($ventas as $test) {
+                if ($test->carta_id == $datos->carta_id){
+                    $checkVenta = true;
+                }
+            }
 
-            $carta = Carta::find($venta->carta_id);
-            $carta->usuario_id = $userId;
+            if(Carta::find($datos->carta_id)){
+                $checkCarta = false;
+            }else{$checkCarta = true;}
 
-            try{
-                $venta->save();
-                $carta->save();
-                $respuesta = "En venta correcto."; 
-            }catch(\Exception $e){
-                $respuesta = $e->getMessage();
+            if($checkVenta){
+                $respuesta = "Carta ya a la venta";
+            }
+            elseif($checkCarta){
+                 $respuesta = "Carta no encontrada";
+            }else{
+                $venta->carta_id = $datos->carta_id;
+                $venta->cantidad = $datos->cantidad;
+                $venta->precio = $datos->precio;
+                $venta->usuario_id = $userId;
+
+                $carta = Carta::find($venta->carta_id);
+                $carta->usuario_id = $userId;
+
+                try{
+                    $venta->save();
+                    $carta->save();
+                    $respuesta = "En venta correcto."; 
+                }catch(\Exception $e){
+                    $respuesta = $e->getMessage();
+                }
             }
         }else{
             $respuesta = "Datos incorrectos.";
