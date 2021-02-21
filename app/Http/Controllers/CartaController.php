@@ -76,32 +76,37 @@ class CartaController extends Controller
        $datos = $request->getContent();
        $datos = json_decode($datos);
 
-       $cartas = Carta::where('nombre', 'like', '%' . $datos->nombre . '%')->get();
+       if(isset($datos)){
 
-        if($cartas){
+            if(isset($datos->nombre)){
 
-           $datosCartas = [];
+                $cartas = Carta::where('nombre', 'like', '%' . $datos->nombre . '%')->get();
 
-            foreach ($cartas as $key=>$carta) {
+                if($cartas->isNotEmpty()){
 
-                foreach ($carta->venta as $venta) {
-                    $precio[$venta->carta_id] = $venta->precio;
-                    $cantidad[$venta->carta_id] = $venta->cantidad;
-                } 
+                   $datosCartas = [];
 
-                foreach ($carta->relacion as $relacion) {
-                    $coleccion[] = $relacion->coleccion->nombre;
-                }   
+                    foreach ($cartas as $key=>$carta) {
 
-                $datosCartas[] = [
-                    "nombre" => $carta->nombre,
-                    "descripcion" => $carta->descripcion,
-                    "coleccion" => $coleccion[$key],
-                    "precio" =>  $precio[$carta->id] ?? "No a la venta",
-                    "cantidad" =>  $cantidad[$carta->id] ?? 0
-                ];
-            }return response()->json($datosCartas);
+                        foreach ($carta->venta as $venta) {
+                            $precio[$venta->carta_id] = $venta->precio;
+                            $cantidad[$venta->carta_id] = $venta->cantidad;
+                        } 
 
-        }return response("Carta no encontrada");
+                        foreach ($carta->relacion as $relacion) {
+                            $coleccion[] = $relacion->coleccion->nombre;
+                        }   
+
+                        $datosCartas[] = [
+                            "nombre" => $carta->nombre,
+                            "descripcion" => $carta->descripcion,
+                            "coleccion" => $coleccion[$key],
+                            "precio" =>  $precio[$carta->id] ?? "No a la venta",
+                            "cantidad" =>  $cantidad[$carta->id] ?? 0
+                        ];
+                    }return response()->json($datosCartas);
+                }return response("Carta no encontrada");
+            }return response("Busca por nombre");
+        }return response("Introduce la búsqueda");
     }
 }
