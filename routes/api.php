@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CartaController;
 use App\Http\Controllers\ColeccionController;
+use App\Http\Controllers\VentaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +25,13 @@ use App\Http\Controllers\ColeccionController;
 Route::prefix('usuarios')->group(function () {
 	Route::post('/register',[UsuarioController::class,"registrar"]);
 	Route::post('/login',[UsuarioController::class,"logear"]);
-	Route::post('/restablecer-pass/',[UsuarioController::class,"restablecerPass"]);
+	Route::post('/restablecer-pass',[UsuarioController::class,"restablecerPass"]);
 });
 
 Route::prefix('cartas')->group(function () {
 	Route::post('/alta',[CartaController::class,"alta"])->middleware('admin');
 	Route::post('/buscar',[CartaController::class,"buscar"])/*->middleware('admin')*/;
+	Route::post('/venta',[VentaController::class,"venta"])->middleware('venta');
 });
 
 Route::prefix('colecciones')->group(function () {

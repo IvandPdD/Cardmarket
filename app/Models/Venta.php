@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Venta extends Model
 {
     use HasFactory;
+
+    public function carta(){
+    	return $this->belongsTo(Carta::class);
+    }
+
+    public function usuario(){
+    	return $this->belongsTo(Usuario::class);
+    }
+
+
 }

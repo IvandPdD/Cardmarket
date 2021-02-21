@@ -28,11 +28,11 @@ class ColeccionController extends Controller
         if($datos){
             foreach($colecciones as $coleccionAlmacenada){
                 if($datos->nombre == $coleccionAlmacenada->nombre){
-                    $chechColeccion = true;
+                    $checkColeccion = true;
                 }
             }
 
-            if($chechColeccion){
+            if($checkColeccion){
                 $respuesta = "Colección ya existente";
             }else{
                 $coleccion->nombre = $datos->nombre;

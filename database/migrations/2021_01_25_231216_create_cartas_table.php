@@ -19,6 +19,7 @@ class CreateCartasTable extends Migration
             
             $table->string('nombre');
             $table->text('descripcion');
+            $table->foreignId('usuario_id')->nullable()->default(NULL);
         });
     }
 

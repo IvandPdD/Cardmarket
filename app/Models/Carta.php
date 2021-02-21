@@ -13,6 +13,10 @@ class Carta extends Model
     	return $this->hasMany(RelacionColeccionCarta::class);
     }
 
+    public function venta(){
+    	return $this->hasMany(Venta::class);
+    }
+
     protected $fillable = [
         'nombre',
         'descripcion',

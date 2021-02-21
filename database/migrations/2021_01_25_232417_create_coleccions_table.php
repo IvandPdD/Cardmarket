@@ -18,8 +18,8 @@ class CreateColeccionsTable extends Migration
             $table->timestamps();
             
             $table->string('nombre');
-            $table->binary('imagen')->nullable();
-            $table->date('fecha_edicion')->nullable();
+            $table->binary('imagen')->nullable()->default(NULL);
+            $table->date('fecha_edicion')->nullable()->default(NULL);
         });
     }
 

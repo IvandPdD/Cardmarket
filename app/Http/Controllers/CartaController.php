@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Carta;
 use App\Models\Coleccion;
 use App\Models\RelacionColeccionCarta;
+use App\Models\Venta;
 use Illuminate\Http\Request;
 
 class CartaController extends Controller
@@ -75,25 +76,32 @@ class CartaController extends Controller
        $datos = $request->getContent();
        $datos = json_decode($datos);
 
-       $id = Carta::where('nombre', $datos->nombre)->value('id');
-       $carta = Carta::find($id);
+       $cartas = Carta::where('nombre', 'like', '%' . $datos->nombre . '%')->get();
 
-        if($carta){
+        if($cartas){
 
-           $cartas = [];
+           $datosCartas = [];
 
-            foreach ($carta->relacion as $relacion) {
-                $coleccion = $relacion->coleccion->nombre;
-            }
+            foreach ($cartas as $key=>$carta) {
 
-            $cartas[] = [
-                "nombre" => $carta->nombre,
-                "descripcion" => $carta->descripcion,
-                "coleccion" => $coleccion
-            ];
-            return response()->json($cartas);
-        }
+                foreach ($carta->venta as $venta) {
+                    $precio[] = $venta->precio;
+                    $cantidad[] = $venta->cantidad;
+                } 
 
-        return response("Carta no encontrada");
+                foreach ($carta->relacion as $relacion) {
+                    $coleccion[] = $relacion->coleccion->nombre;
+                }   
+
+                $datosCartas[] = [
+                    "nombre" => $carta->nombre,
+                    "descripcion" => $carta->descripcion,
+                    "precio" =>  $precio[$key] ?? "No a la venta",
+                    "cantidad" =>  $cantidad[$key] ?? 0,
+                    "coleccion" => $coleccion[$key]
+                ];
+            }return response()->json($datosCartas);
+
+        }return response("Carta no encontrada");
     }
 }
